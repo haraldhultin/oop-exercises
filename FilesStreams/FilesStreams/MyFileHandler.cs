@@ -52,6 +52,7 @@ namespace FilesStreams
                     streamWriter.WriteLine(streamReader.ReadLine().ToUpper());
                 }
             }
+            streamReader.Close();
             //FileStream fs = File.OpenRead(pathReadFrom); // CopyTo? hur? 
             //FileStream fsWrite = File.OpenWrite(pathWriteTo);
             //fs.CopyTo(fsWrite);
