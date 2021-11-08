@@ -62,9 +62,10 @@ namespace FilesStreams
         {
             using (FileStream fs = File.OpenRead("latin1.txt"))
             {
-                for (int i = 0; i < fs.ToString().Length; i++)
+                int b;
+                while ((b = fs.ReadByte()) != -1)
                 {
-                    Console.WriteLine(fs.ReadByte());
+                    Console.WriteLine(b);
                 }                 
             }            
         }
