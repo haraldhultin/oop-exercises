@@ -9,27 +9,35 @@ namespace ConsoleFileExplorer
 {
     class ConsoleExplorer
     {
+        private ViewState _viewState = ViewState.List;
         public void Run()
         {
-            int index = 0;
+            FolderView folderView = new FolderView();
             while (true)
             {
-                string[] entries = Directory.GetFileSystemEntries(".");
-                foreach (var element in entries)
+                if (_viewState == ViewState.List) { folderView.PrintList(folderView.path); }
+                if (_viewState == ViewState.FileView)
                 {
-                    Console.ForegroundColor = element == entries[index] ?  ConsoleColor.Yellow :  ConsoleColor.Gray;
-                    var prefix = File.Exists(element) ? "-" : "#"; // if file or dir
-                    Console.WriteLine($"{prefix} {Path.GetFileName(element)}");
+                    Console.Clear();
+                    string currentFileData = File.ReadAllText(folderView.CurrentFileName);
+                    Console.WriteLine(currentFileData);
+                    Console.Write("Tryck på mellanslag för att gå tillbaka till listan");
+                    Console.ReadKey(true);
+                    _viewState = ViewState.List;
+                    continue;
                 }
-                var key = Console.ReadKey(true).Key;
-                index = key switch
+
+
+                switch (Console.ReadKey(true).Key)
                 {
-                    ConsoleKey.UpArrow => Math.Clamp( --index, 0, entries.Length-1),
-                    ConsoleKey.DownArrow => Math.Clamp(++index, 0, entries.Length-1),
-                    _ => 0
-                };
-                Console.Clear();
-            }
+                    case ConsoleKey.UpArrow: folderView.Up(); break;
+                    case ConsoleKey.DownArrow: folderView.Down(); break;
+                    case ConsoleKey.Spacebar: 
+                        _viewState = _viewState == ViewState.FileView ? ViewState.List : ViewState.FileView; break;
+                    case ConsoleKey.Enter: folderView.EnterFolder(); break;
+                    default: break;
+                }
+            }           
         }
     }
 }

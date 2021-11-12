@@ -9,26 +9,42 @@ namespace ConsoleFileExplorer
 {
     class FolderView
     {
+        public string path;
         private int _index = 0;
+        public int Index { get { return _index; } set { _index = Math.Clamp(value, 0, entries.Length - 1); } }
         string[] entries;
-        public void PrintList()
+        
+        public string CurrentFileName 
+        { 
+            get { return Path.GetFileName(entries[Index]); } 
+        }
+        public FolderView()
+        {
+            path = Directory.GetCurrentDirectory();
+        }
+        public void PrintList(string path)
         {
             Console.Clear();
-            entries = Directory.GetFileSystemEntries(".");
+            entries = Directory.GetFileSystemEntries(path);
             foreach (var element in entries)
-            {
-                Console.ForegroundColor = element == entries[_index] ? ConsoleColor.Yellow : ConsoleColor.Gray;
+            {                
+                Console.ForegroundColor = element == entries[Index] ? ConsoleColor.Yellow : ConsoleColor.Gray;
                 var prefix = File.Exists(element) ? "-" : "#"; // if file or dir
                 Console.WriteLine($"{prefix} {Path.GetFileName(element)}");
             }
         }
         public void Up()
         {
-            _index = Math.Clamp(--_index, 0, entries.Length - 1);
+            Index--;
         }
         public void Down()
         {
-            _index = Math.Clamp(++_index, 0, entries.Length - 1);
+            Index++;
+        }
+        public void EnterFolder()
+        {
+            Index = 0;
+            PrintList(Path.GetFullPath(entries[Index]));
         }
     }
 }
