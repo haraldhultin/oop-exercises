@@ -17,7 +17,7 @@ namespace ConsoleFileExplorer
                 string[] entries = Directory.GetFileSystemEntries(".");
                 foreach (var element in entries)
                 {
-                    _ = element == entries[index] ? Console.ForegroundColor = ConsoleColor.Yellow : Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.ForegroundColor = element == entries[index] ?  ConsoleColor.Yellow :  ConsoleColor.Gray;
                     var prefix = File.Exists(element) ? "-" : "#"; // if file or dir
                     Console.WriteLine($"{prefix} {Path.GetFileName(element)}");
                 }
